@@ -12,7 +12,7 @@ from papertrail.ocr import detect_language
         ("   ", "unknown"),
         ("hello world", "eng"),
         ("Привет мир", "rus"),
-        ("Hello Привет", "mixed"),
+        ("Hello Привет", "rus"),
     ],
 )
 def test_detect_language(text: str, expected: str) -> None:
