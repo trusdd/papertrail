@@ -4,9 +4,9 @@ import sqlite3
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from papertrail.db import get_stored_hash, upsert_document
+from papertrail.db import upsert_document
 from papertrail.ocr import detect_language, extract_text
-from papertrail.scanner import file_hash, find_documents
+from papertrail.scanner import file_hash, find_documents, get_stored_hash
 
 
 @dataclass
