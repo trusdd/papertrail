@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -71,7 +71,7 @@ def upsert_document(
     mtime: float,
     language: str = "unknown",
 ) -> int:
-    indexed_at = datetime.utcnow().isoformat(timespec="seconds")
+    indexed_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     cur = conn.execute(
         """
         INSERT INTO documents (path, file_hash, text, size_bytes, mtime, indexed_at, language)
