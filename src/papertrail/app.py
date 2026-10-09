@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import queue
 import sqlite3
 import subprocess
 import sys
@@ -57,8 +58,12 @@ class PapertrailApp:
         self.search_var = StringVar()
         self.search_var.trace_add("write", lambda *_: self.refresh_results())
 
+        self._result_queue: queue.Queue[tuple[str, object]] = queue.Queue()
+
         self._build_widgets()
         self.refresh_results()
+
+        self.root.after(100, self._poll_queue)
 
     def _build_widgets(self) -> None:
         top = ttk.Frame(self.root, padding=10)
@@ -129,20 +134,39 @@ class PapertrailApp:
     def _run_index(self, folder: Path) -> None:
         try:
             stats = index_folder(self.conn, folder)
-            msg = (
-                f"Всего: {stats.total}, "
-                f"новых: {stats.indexed}, "
-                f"пропущено: {stats.skipped}, "
-                f"ошибок: {len(stats.errors)}"
-            )
+            self._result_queue.put(("ok", stats))
         except Exception as e:
-            msg = f"Ошибка: {e}"
-        self.root.after(0, lambda: self._on_index_done(msg))
+            self._result_queue.put(("error", str(e)))
 
-    def _on_index_done(self, msg: str) -> None:
-        self.index_button.config(state="normal")
-        self.status_label.config(text=msg)
-        self.refresh_results()
+    def _poll_queue(self) -> None:
+        try:
+            while True:
+                kind, payload = self._result_queue.get_nowait()
+                if kind == "ok":
+                    stats = payload
+                    msg = (
+                        f"Всего: {stats.total}, "
+                        f"новых: {stats.indexed}, "
+                        f"пропущено: {stats.skipped}, "
+                        f"ошибок: {len(stats.errors)}"
+                    )
+                    self.status_label.config(text=msg)
+                    self.index_button.config(state="normal")
+                    self.refresh_results()
+                    if stats.errors:
+                        messagebox.showwarning(
+                            "papertrail",
+                            "Некоторые файлы не удалось обработать:\n\n"
+                            + "\n".join(stats.errors[:5]),
+                        )
+                elif kind == "error":
+                    self.status_label.config(text="Ошибка")
+                    self.index_button.config(state="normal")
+                    messagebox.showerror("papertrail", f"Ошибка индексации:\n{payload}")
+        except queue.Empty:
+            pass
+        finally:
+            self.root.after(100, self._poll_queue)
 
     def on_row_double_click(self, _event) -> None:
         selection = self.tree.selection()
