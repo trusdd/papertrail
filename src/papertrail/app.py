@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import queue
-import sqlite3
 import subprocess
 import sys
 import threading
@@ -49,7 +48,6 @@ class PapertrailApp:
         self.root = root
         self.db_path = db_path or default_db_path()
         init_db(self.db_path)
-        self.conn: sqlite3.Connection = connect(self.db_path)
 
         self.root.title("papertrail")
         self.root.geometry("900x560")
@@ -106,10 +104,14 @@ class PapertrailApp:
 
     def refresh_results(self) -> None:
         query = self.search_var.get().strip()
-        if query:
-            docs = search_documents(self.conn, query)
-        else:
-            docs = get_all_documents(self.conn)
+        conn = connect(self.db_path)
+        try:
+            if query:
+                docs = search_documents(conn, query)
+            else:
+                docs = get_all_documents(conn)
+        finally:
+            conn.close()
 
         for row in self.tree.get_children():
             self.tree.delete(row)
@@ -133,7 +135,11 @@ class PapertrailApp:
 
     def _run_index(self, folder: Path) -> None:
         try:
-            stats = index_folder(self.conn, folder)
+            conn = connect(self.db_path)
+            try:
+                stats = index_folder(conn, folder)
+            finally:
+                conn.close()
             self._result_queue.put(("ok", stats))
         except Exception as e:
             self._result_queue.put(("error", str(e)))

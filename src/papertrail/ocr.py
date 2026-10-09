@@ -20,8 +20,8 @@ PDF_EXTENSION = ".pdf"
 
 DEFAULT_LANG = "rus+eng"
 
-RUS_THRESHOLD = 0.8
-ENG_THRESHOLD = 0.2
+RUS_THRESHOLD = 0.5
+ENG_THRESHOLD = 0.1
 
 
 def _cyrillic_ratio(text: str) -> float | None:
