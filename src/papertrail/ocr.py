@@ -20,22 +20,25 @@ PDF_EXTENSION = ".pdf"
 
 DEFAULT_LANG = "rus+eng"
 
+RUS_THRESHOLD = 0.8
+ENG_THRESHOLD = 0.2
 
-def _cyrillic_ratio(text: str) -> float:
+
+def _cyrillic_ratio(text: str) -> float | None:
     letters = [c for c in text if c.isalpha()]
     if not letters:
-        return 0.0
+        return None
     cyrillic = sum(1 for c in letters if "\u0400" <= c <= "\u04FF")
     return cyrillic / len(letters)
 
 
 def detect_language(text: str) -> str:
-    if not text.strip():
-        return "unknown"
     ratio = _cyrillic_ratio(text)
-    if ratio > 0.5:
+    if ratio is None:
+        return "unknown"
+    if ratio > RUS_THRESHOLD:
         return "rus"
-    if ratio < 0.05:
+    if ratio < ENG_THRESHOLD:
         return "eng"
     return "mixed"
 
