@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from papertrail.app import format_size, format_document_row
+from papertrail.app import format_size, format_document_row, format_indexed_at
 from papertrail.db import Document
 
 
@@ -32,7 +32,7 @@ def test_format_document_row() -> None:
         language="rus",
     )
     row = format_document_row(doc)
-    assert row == ("insurance.pdf", "RUS", "2.0 KB", "2026-01-01T00:00:00+00:00")
+    assert row == ("insurance.pdf", "RUS", "2.0 KB", "01.01.2026 00:00")
 
 
 def test_format_document_row_unknown_language() -> None:
@@ -51,10 +51,8 @@ def test_format_document_row_unknown_language() -> None:
 
 
 def test_format_indexed_at_iso() -> None:
-    from papertrail.app import format_indexed_at
     assert format_indexed_at("2026-10-09T23:41:00+00:00") == "09.10.2026 23:41"
 
 
 def test_format_indexed_at_invalid() -> None:
-    from papertrail.app import format_indexed_at
     assert format_indexed_at("garbage") == "garbage"
