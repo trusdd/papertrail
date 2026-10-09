@@ -28,10 +28,20 @@ def format_size(num_bytes: int) -> str:
     return f"{size:.1f} TB"
 
 
+def format_indexed_at(value: str) -> str:
+    try:
+        from datetime import datetime, timezone
+        dt = datetime.fromisoformat(value)
+        dt = dt.astimezone(timezone.utc)
+        return dt.strftime("%d.%m.%Y %H:%M")
+    except (ValueError, TypeError):
+        return value
+
+
 def format_document_row(doc: Document) -> tuple[str, str, str, str]:
     name = Path(doc.path).name
     lang = doc.language.upper() if doc.language != "unknown" else "—"
-    return (name, lang, format_size(doc.size_bytes), doc.indexed_at)
+    return (name, lang, format_size(doc.size_bytes), format_indexed_at(doc.indexed_at))
 
 
 def open_in_system(path: str) -> None:

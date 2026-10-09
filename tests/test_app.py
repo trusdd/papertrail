@@ -48,3 +48,13 @@ def test_format_document_row_unknown_language() -> None:
     )
     row = format_document_row(doc)
     assert row[1] == "—"
+
+
+def test_format_indexed_at_iso() -> None:
+    from papertrail.app import format_indexed_at
+    assert format_indexed_at("2026-10-09T23:41:00+00:00") == "09.10.2026 23:41"
+
+
+def test_format_indexed_at_invalid() -> None:
+    from papertrail.app import format_indexed_at
+    assert format_indexed_at("garbage") == "garbage"
