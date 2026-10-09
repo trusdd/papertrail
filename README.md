@@ -2,6 +2,7 @@
 
 > Local document organizer with OCR search. Your papers never leave your computer.
 
+[![tests](https://github.com/trusdd/papertrail/actions/workflows/tests.yml/badge.svg)](https://github.com/trusdd/papertrail/actions/workflows/tests.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Status](https://img.shields.io/badge/status-MVP-orange)]()
