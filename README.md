@@ -16,9 +16,37 @@ Your receipts, contracts, warranties, and medical records are scattered across f
 
 **macOS:** [⬇️ Download papertrail-0.1.0.dmg](https://github.com/trusdd/papertrail/releases/latest) (14 MB)
 
-> First run requires `brew install tesseract tesseract-lang poppler`.
-
 **Windows / Linux:** Not yet available. [Watch the repo](https://github.com/trusdd/papertrail) for updates.
+
+## ⚠️ Requirements (read before first launch)
+
+papertrail is an early MVP. Two manual steps are required before the app will work.
+
+### 1. Install Tesseract and Poppler via Homebrew
+
+    brew install tesseract tesseract-lang poppler
+
+If you don't have Homebrew, install it first from [brew.sh](https://brew.sh) — it's a one-line command.
+
+Tesseract is the OCR engine that reads text from your PDFs and scans. Poppler converts PDF pages into images. Both are external tools that papertrail calls from inside; they are not bundled yet.
+
+### 2. Bypass macOS Gatekeeper
+
+The app is not signed with an Apple Developer certificate yet, so macOS will block it on first launch. There are two ways around this:
+
+**Option A (via Finder):**
+
+1. Drag `papertrail.app` into Applications.
+2. Right-click it in Applications → **Open** → in the dialog click **Open Anyway**.
+3. From then on, double-click works normally.
+
+**Option B (via Terminal):**
+
+    xattr -cr /Applications/papertrail.app
+
+After that, `papertrail` opens like any other app.
+
+> Both steps will be automated in **v0.2.0** — Tesseract and Poppler will be bundled inside the `.app`, and the app will be signed.
 
 ## Why
 
@@ -38,6 +66,16 @@ There are two kinds of tools for managing documents today:
 - **Incremental indexing** — files are re-scanned only when they change (SHA-256)
 - **Simple GUI** — pick a folder, search, double-click to open
 - **Tested** — 39 unit tests, no GUI dependencies in the core
+
+## Usage
+
+1. Launch `papertrail`.
+2. Click **"Выбрать папку и проиндексировать"** and pick a folder with your documents.
+3. Wait while papertrail runs OCR on each file. The status bar shows progress.
+4. Type anything in the **search box** — results update live as you type.
+5. **Double-click** any row to open the file in your default app.
+
+The index is stored in `~/papertrail.db`. Your documents stay where they are — papertrail never moves or modifies them.
 
 ## Install from source
 
@@ -59,20 +97,9 @@ There are two kinds of tools for managing documents today:
     source .venv/bin/activate
     pip install -e .
 
-## Usage
-
-Run the app:
+Then run:
 
     papertrail
-
-Then:
-
-1. Click **"Выбрать папку и проиндексировать"** and pick a folder with your documents.
-2. Wait while papertrail runs OCR on each file. The status bar will show progress.
-3. Type anything in the **search box** — results update live as you type.
-4. **Double-click** any row to open the file in your default app.
-
-The index is stored in `~/papertrail.db`. Your documents themselves stay where they are — papertrail never moves or modifies them.
 
 ## How it works
 
@@ -100,10 +127,11 @@ The index is stored in `~/papertrail.db`. Your documents themselves stay where t
 - [x] Tkinter GUI with live search
 - [x] Human-readable date formatting
 - [x] Packaged `.dmg` for macOS
+- [ ] Bundle Tesseract and Poppler inside the `.app`
+- [ ] Sign and notarize the app with Apple Developer certificate
 - [ ] Drag-and-drop a folder onto the window
 - [ ] Auto-categorization (invoice, contract, receipt) by keywords
 - [ ] Thumbnail previews instead of plain table
-- [ ] Bundled Tesseract (no `brew install` required)
 - [ ] Windows and Linux builds
 - [ ] Multi-language OCR (German, French, Spanish)
 - [ ] Encrypted index (optional password)
