@@ -6,6 +6,7 @@ __pycache__/
 build/
 dist/
 *.spec
+!papertrail.spec
 .vscode/
 .idea/
 .DS_Store
@@ -13,3 +14,4 @@ dist/
 *.sqlite
 *.sqlite3
 *.dmg
+icon.png
