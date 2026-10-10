@@ -12,6 +12,12 @@ Your receipts, contracts, warranties, and medical records are scattered across f
 
 ![screenshot](docs/screenshot.png)
 
+## Download
+
+[**⬇️ Download papertrail-0.1.0.dmg for macOS**](https://github.com/trusdd/papertrail/releases/latest)
+
+> Requires `brew install tesseract tesseract-lang poppler` on first run. Windows and Linux builds are coming.
+
 ## Why
 
 There are two kinds of tools for managing documents today:
