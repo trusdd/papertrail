@@ -6,7 +6,7 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Status](https://img.shields.io/badge/status-MVP-orange)]()
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey)]()
+[![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)]()
 
 Your receipts, contracts, warranties, and medical records are scattered across folders named "Downloads" and "Desktop". **papertrail** turns that chaos into a searchable, private archive — like Google Photos, but for your papers.
 
@@ -14,9 +14,11 @@ Your receipts, contracts, warranties, and medical records are scattered across f
 
 ## Download
 
-[**⬇️ Download papertrail-0.1.0.dmg for macOS**](https://github.com/trusdd/papertrail/releases/latest)
+**macOS:** [⬇️ Download papertrail-0.1.0.dmg](https://github.com/trusdd/papertrail/releases/latest) (14 MB)
 
-> Requires `brew install tesseract tesseract-lang poppler` on first run. Windows and Linux builds are coming.
+> First run requires `brew install tesseract tesseract-lang poppler`.
+
+**Windows / Linux:** Not yet available. [Watch the repo](https://github.com/trusdd/papertrail) for updates.
 
 ## Why
 
@@ -37,7 +39,7 @@ There are two kinds of tools for managing documents today:
 - **Simple GUI** — pick a folder, search, double-click to open
 - **Tested** — 39 unit tests, no GUI dependencies in the core
 
-## Install
+## Install from source
 
 ### macOS
 
@@ -97,10 +99,11 @@ The index is stored in `~/papertrail.db`. Your documents themselves stay where t
 - [x] OCR via Tesseract (Russian + English)
 - [x] Tkinter GUI with live search
 - [x] Human-readable date formatting
+- [x] Packaged `.dmg` for macOS
 - [ ] Drag-and-drop a folder onto the window
 - [ ] Auto-categorization (invoice, contract, receipt) by keywords
 - [ ] Thumbnail previews instead of plain table
-- [ ] Packaged `.dmg` for macOS (no Python install required)
+- [ ] Bundled Tesseract (no `brew install` required)
 - [ ] Windows and Linux builds
 - [ ] Multi-language OCR (German, French, Spanish)
 - [ ] Encrypted index (optional password)
