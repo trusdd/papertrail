@@ -1,0 +1,59 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Homebrew dependencies
+        run: |
+          brew install tesseract tesseract-lang poppler create-dmg
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run tests
+        run: pytest -v
+
+      - name: Build .app bundle
+        run: |
+          pyinstaller papertrail.spec --noconfirm --clean
+
+      - name: Build .dmg
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          create-dmg \
+            --volname "papertrail" \
+            --window-pos 200 120 \
+            --window-size 600 400 \
+            --icon-size 100 \
+            --icon "papertrail.app" 150 190 \
+            --hide-extension "papertrail.app" \
+            --app-drop-link 450 190 \
+            "papertrail-${VERSION}.dmg" \
+            "dist/papertrail.app"
+
+      - name: Upload .dmg to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: papertrail-*.dmg
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
